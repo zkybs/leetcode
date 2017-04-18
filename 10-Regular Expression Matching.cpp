@@ -19,34 +19,31 @@
 
 class Solution {
 public:
-    bool isMatch(string s, string p) {
-        if(s.size()==0 && p.size()==0) return true;
-        if(s.size()==0) {
-            if(p.size()>2 && p[1]=='*')
-                return isMatch(s,p.substr(2));
-            else if(p.size()==2 && p[1]=='*')
-				return true;
+    bool match(const char *s, const char *p) {
+        if(p[0]==0){
+            if(s[0]==0) return true;
             else return false;
-        }
-        if(p.size()==0) return false;
-		if(p.size()==1){
-			if(s[0]==p[0] || p[0]=='.') return isMatch(s.substr(1),p.substr(1));
-			else return false;
-		} 
-        if(p.size()>1 && p[1]!='*'){
-            if(p[0]=='.' || s[0]==p[0]){
-				return isMatch(s.substr(1),p.substr(1));
-            }else return false;
-        }
-		if(p.size()>1 && p[1]=='*'){
+        } 
+        if(p[1]=='*'){
 			int i=-1;
 			do{
 				i++;
-				if(isMatch(s.substr(i),p.substr(2))){
+				if(match(&s[i],&p[2])){
 					return true;
 				}
-			}while(i<s.size() && (s[i]==p[0] || p[0]=='.'));	
+			}while(s[i]!=0 && (s[i]==p[0] || p[0]=='.'));	
 			return false;
 		}
+        if(p[1]!='*'){
+			if(s[0]==0) return false;
+            if(s[0]==p[0] || p[0]=='.'){
+				return match(&s[1],&p[1]);
+            }else return false;
+        }
+	}
+	bool isMatch(string s, string p){
+	    const char *_s=s.c_str();
+	    const char *_p=p.c_str();
+	    return match(_s,_p);
 	}
 };
